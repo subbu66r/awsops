@@ -16,10 +16,7 @@ import software.amazon.awssdk.services.secretsmanager.model.PutSecretValueRespon
 
 public class SaveToSecrets {
 
-	@Inject
-	public SaveToSecrets() {
-		// empty constructor
-	}
+	
 
 	public String saveToSecrets(String code) {
 
