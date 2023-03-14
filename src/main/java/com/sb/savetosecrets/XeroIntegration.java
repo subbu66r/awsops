@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,7 +53,9 @@ public class XeroIntegration {
 				//saveToDynamoDb(response.toString());
 				return response.toString();
 			} else {
-				System.out.println("Request failed with HTTP error code: " + responseCode);
+				String erroStrace = new BufferedReader(new InputStreamReader(con.getErrorStream()))
+			    .lines().parallel().collect(Collectors.joining("\n"));
+				System.out.println("Request failed with HTTP error code: " + erroStrace);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -3,6 +3,8 @@ package com.sb.savetosecrets;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,6 +15,11 @@ import software.amazon.awssdk.services.secretsmanager.model.PutSecretValueReques
 import software.amazon.awssdk.services.secretsmanager.model.PutSecretValueResponse;
 
 public class SaveToSecrets {
+
+	@Inject
+	public SaveToSecrets() {
+		// empty constructor
+	}
 
 	public String saveToSecrets(String code) {
 

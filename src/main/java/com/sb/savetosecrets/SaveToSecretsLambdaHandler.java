@@ -2,6 +2,9 @@ package com.sb.savetosecrets;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -12,6 +15,16 @@ public class SaveToSecretsLambdaHandler
 		implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+	@Inject
+	SaveToSecrets saveToSecrets;
+
+	@Inject
+	Provider<APIGatewayProxyResponseEvent> apiGatewayProxyResponseEvent;
+
+	public SaveToSecretsLambdaHandler() {
+		DaggerSaveToSecretsComponent.create().inject(this);
+	}
 
 	@Override
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input, Context context) {
@@ -24,12 +37,14 @@ public class SaveToSecretsLambdaHandler
 			// Extract the "code" string from the request body
 			String code = bodyJson.get("code");
 			// Do something with the input data
-			//new XeroIntegration().invokeXeroForTokens(code);
+			// new XeroIntegration().invokeXeroForTokens(code);
 			System.out.println("calling secrets class");
-			new SaveToSecrets().saveToSecrets(code);
+			System.out.println("saveToSecrets " + saveToSecrets);
+			saveToSecrets.saveToSecrets(code);
 			System.out.println("call to secrets class is success");
 			String output = "Received code: " + code;
-			APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent().withStatusCode(200)
+			System.out.println("apiGatewayProxyResponseEvent " + apiGatewayProxyResponseEvent);
+			APIGatewayProxyResponseEvent response = apiGatewayProxyResponseEvent.get().withStatusCode(200)
 					.withBody(output);
 			System.out.println("lambda processed successfully " + response.getBody());
 			return response;
